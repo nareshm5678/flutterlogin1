@@ -1,29 +1,44 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'screens/login_screen.dart';
+import 'constants/app_colors.dart';
+import 'config/firebase_config.dart';
 
-Future<void> main() async {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   
-  if (kIsWeb) {
-    await Firebase.initializeApp(
-      options: const FirebaseOptions(
-        apiKey: "AIzaSyDnGMwJYzsOp4_7WxC8CiN0Y4XBk-gNomc",
-        authDomain: "br-sma.firebaseapp.com",
-        projectId: "br-sma",
-        storageBucket: "br-sma.appspot.com",
-        messagingSenderId: "787190721610",
-        appId: "1:787190721610:web:57921c0bf2523985274ab3",
-        measurementId: "G-1MV3HFZN78"
-      ),
-    );
-  } else {
-    await Firebase.initializeApp();
+  try {
+    if (kIsWeb) {
+      await FirebaseConfig.initializeFirebase();
+    } else {
+      await Firebase.initializeApp();
+    }
+  } catch (e) {
+    debugPrint('Firebase initialization error: $e');
   }
   
   runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'SMA Login',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: AppColors.primaryYellow),
+        useMaterial3: true,
+        textTheme: GoogleFonts.interTextTheme(),
+      ),
+      home: const LoginScreen(),
+    );
+  }
 }
 
 class UserData {
@@ -69,25 +84,6 @@ class UserData {
     );
   }
 }
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'SMA Login',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFFFFC107)),
-        useMaterial3: true,
-        textTheme: GoogleFonts.interTextTheme(),
-      ),
-      home: const LoginPage(),
-    );
-  }
-}
-
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 

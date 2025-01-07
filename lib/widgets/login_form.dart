@@ -54,6 +54,7 @@ class _LoginFormState extends State<LoginForm> {
       final userData = querySnapshot.docs.first.data() as Map<String, dynamic>;
       
       if (userData['user_password'] != _passwordController.text) {
+        if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Incorrect password')),
         );
@@ -63,11 +64,12 @@ class _LoginFormState extends State<LoginForm> {
       final user = UserModel.fromFirestore(userData);
       
       if (!mounted) return;
-      Navigator.pushReplacement(
+      Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(
           builder: (context) => DashboardScreen(user: user),
         ),
+        (route) => false, // This removes all previous routes
       );
     } catch (e) {
       if (!mounted) return;
