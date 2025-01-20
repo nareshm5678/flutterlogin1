@@ -74,7 +74,7 @@ class _SliderWidgetState extends State<SliderWidget> {
                       Text(
                         _slides[index]['title']!,
                         style: GoogleFonts.inter(
-                          fontSize: 18,
+                          fontSize: 14,
                           fontWeight: FontWeight.w600,
                           color: const Color.fromARGB(255, 255, 0, 0),
                           height: 1.5,
@@ -85,7 +85,7 @@ class _SliderWidgetState extends State<SliderWidget> {
                       ClipRRect(
                         borderRadius: BorderRadius.circular(16),
                         child: Container(
-                          height: 250,
+                          height: 200,
                           width: double.infinity,
                           decoration: BoxDecoration(
                             color: Colors.white.withOpacity(0.2),
@@ -102,7 +102,7 @@ class _SliderWidgetState extends State<SliderWidget> {
                                     const Icon(
                                       Icons.error_outline,
                                       color: Colors.white,
-                                      size: 50,
+                                      size: 40,
                                     ),
                                     const SizedBox(height: 16),
                                     Text(
