@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'screens/login_screen.dart';
+import 'screens/notification_screen.dart';
 import 'constants/app_colors.dart';
 
 class App extends StatelessWidget {
@@ -16,7 +17,11 @@ class App extends StatelessWidget {
         useMaterial3: true,
         textTheme: GoogleFonts.interTextTheme(),
       ),
-      home: const LoginScreen(),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => const LoginScreen(),
+        '/notifications': (context) => NotificationScreen(),
+      },
     );
   }
 }

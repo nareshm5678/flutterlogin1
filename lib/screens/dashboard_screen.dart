@@ -3,10 +3,14 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/user_model.dart';
 import '../constants/app_colors.dart';
+import '../widgets/no_notification_widget.dart';
+import '../screens/notification_screen.dart';
+import '../widgets/no_fav.dart';
+import '../screens/favourites_screen.dart';
 
 class DashboardScreen extends StatefulWidget {
   final UserModel user;
-  
+
   const DashboardScreen({
     super.key,
     required this.user,
@@ -20,7 +24,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   int _selectedIndex = 0;
   bool _isSidebarExpanded = true;
   final List<TextEditingController> _controllers = [];
-  
+
   @override
   void dispose() {
     for (var controller in _controllers) {
@@ -42,34 +46,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
       activeIcon: Icons.dashboard_rounded,
     ),
     const _SidebarItem(
-      title: 'Assignments',
-      icon: Icons.assignment_outlined,
-      activeIcon: Icons.assignment,
+      title: 'My Courses',
+      icon: Icons.book_outlined,
+      activeIcon: Icons.book,
     ),
     const _SidebarItem(
-      title: 'Attendance',
-      icon: Icons.calendar_today_outlined,
-      activeIcon: Icons.calendar_today,
-    ),
-    const _SidebarItem(
-      title: 'Grades',
-      icon: Icons.grade_outlined,
-      activeIcon: Icons.grade,
-    ),
-    const _SidebarItem(
-      title: 'Schedule',
-      icon: Icons.schedule_outlined,
-      activeIcon: Icons.schedule,
-    ),
-    const _SidebarItem(
-      title: 'Messages',
-      icon: Icons.message_outlined,
-      activeIcon: Icons.message,
-    ),
-    const _SidebarItem(
-      title: 'Library',
-      icon: Icons.library_books_outlined,
-      activeIcon: Icons.library_books,
+      title: 'Favourites',
+      icon: Icons.favorite_border,
+      activeIcon: Icons.favorite,
     ),
     const _SidebarItem(
       title: 'Settings',
@@ -95,7 +79,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 });
               },
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -219,8 +204,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               child: Text(
                                 item.title,
                                 style: GoogleFonts.inter(
-                                  color: isSelected ? Colors.white : Colors.white70,
-                                  fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                                  color: isSelected
+                                      ? Colors.white
+                                      : Colors.white70,
+                                  fontWeight: isSelected
+                                      ? FontWeight.bold
+                                      : FontWeight.normal,
                                 ),
                                 overflow: TextOverflow.ellipsis,
                               ),
@@ -263,7 +252,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     final newPasswordController = _createController('');
     bool obscureCurrentPassword = true;
     bool obscureNewPassword = true;
-    
+
     String? selectedClass = widget.user.userStd;
     String? selectedType = widget.user.userType;
 
@@ -278,7 +267,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
       selectedType = typeOptions.first;
     }
 
-    Widget buildFieldWithDelete(TextEditingController controller, String label, {bool isNumber = false}) {
+    Widget buildFieldWithDelete(TextEditingController controller, String label,
+        {bool isNumber = false}) {
       return Padding(
         padding: const EdgeInsets.symmetric(vertical: 8.0),
         child: Row(
@@ -290,7 +280,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   labelText: label,
                   border: const OutlineInputBorder(),
                 ),
-                keyboardType: isNumber ? TextInputType.number : TextInputType.text,
+                keyboardType:
+                    isNumber ? TextInputType.number : TextInputType.text,
               ),
             ),
             IconButton(
@@ -334,11 +325,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         children: [
                           buildFieldWithDelete(nameController, 'Name'),
                           const SizedBox(height: 16),
-                          buildFieldWithDelete(parentNameController, 'Parent Name'),
+                          buildFieldWithDelete(
+                              parentNameController, 'Parent Name'),
                           const SizedBox(height: 16),
                           buildFieldWithDelete(genderController, 'Gender'),
                           const SizedBox(height: 16),
-                          buildFieldWithDelete(ageController, 'Age', isNumber: true),
+                          buildFieldWithDelete(ageController, 'Age',
+                              isNumber: true),
                           const SizedBox(height: 16),
                           Row(
                             children: [
@@ -349,11 +342,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     labelText: 'Current Password',
                                     suffixIcon: IconButton(
                                       icon: Icon(
-                                        obscureCurrentPassword ? Icons.visibility : Icons.visibility_off,
+                                        obscureCurrentPassword
+                                            ? Icons.visibility
+                                            : Icons.visibility_off,
                                       ),
                                       onPressed: () {
                                         setState(() {
-                                          obscureCurrentPassword = !obscureCurrentPassword;
+                                          obscureCurrentPassword =
+                                              !obscureCurrentPassword;
                                         });
                                       },
                                     ),
@@ -373,11 +369,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     labelText: 'New Password',
                                     suffixIcon: IconButton(
                                       icon: Icon(
-                                        obscureNewPassword ? Icons.visibility : Icons.visibility_off,
+                                        obscureNewPassword
+                                            ? Icons.visibility_off
+                                            : Icons.visibility,
+                                        color: Colors.grey,
                                       ),
                                       onPressed: () {
                                         setState(() {
-                                          obscureNewPassword = !obscureNewPassword;
+                                          obscureNewPassword =
+                                              !obscureNewPassword;
                                         });
                                       },
                                     ),
@@ -393,7 +393,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               Expanded(
                                 child: DropdownButtonFormField<String>(
                                   value: selectedClass,
-                                  decoration: const InputDecoration(labelText: 'Class'),
+                                  decoration:
+                                      const InputDecoration(labelText: 'Class'),
                                   items: classOptions.map((String value) {
                                     return DropdownMenuItem<String>(
                                       value: value,
@@ -408,7 +409,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 ),
                               ),
                               IconButton(
-                                icon: const Icon(Icons.delete, color: Colors.red),
+                                icon:
+                                    const Icon(Icons.delete, color: Colors.red),
                                 onPressed: () {
                                   setState(() {
                                     selectedClass = classOptions.first;
@@ -423,7 +425,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               Expanded(
                                 child: DropdownButtonFormField<String>(
                                   value: selectedType,
-                                  decoration: const InputDecoration(labelText: 'Type'),
+                                  decoration:
+                                      const InputDecoration(labelText: 'Type'),
                                   items: typeOptions.map((String value) {
                                     return DropdownMenuItem<String>(
                                       value: value,
@@ -438,7 +441,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 ),
                               ),
                               IconButton(
-                                icon: const Icon(Icons.delete, color: Colors.red),
+                                icon:
+                                    const Icon(Icons.delete, color: Colors.red),
                                 onPressed: () {
                                   setState(() {
                                     selectedType = typeOptions.first;
@@ -463,7 +467,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     children: [
                       TextButton(
                         onPressed: () => Navigator.of(context).pop(),
-                        child: Text('Cancel',
+                        child: Text(
+                          'Cancel',
                           style: GoogleFonts.inter(color: Colors.grey),
                         ),
                       ),
@@ -473,7 +478,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           try {
                             if (selectedClass == null || selectedType == null) {
                               ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(content: Text('Please select class and type')),
+                                const SnackBar(
+                                    content:
+                                        Text('Please select class and type')),
                               );
                               return;
                             }
@@ -483,17 +490,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               if (currentPasswordController.text.isEmpty) {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
-                                    content: Text('Please enter current password to change password'),
+                                    content: Text(
+                                        'Please enter current password to change password'),
                                     backgroundColor: Colors.red,
                                   ),
                                 );
                                 return;
                               }
 
-                              if (currentPasswordController.text != widget.user.userPassword) {
+                              if (currentPasswordController.text !=
+                                  widget.user.userPassword) {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
-                                    content: Text('Current password is incorrect'),
+                                    content:
+                                        Text('Current password is incorrect'),
                                     backgroundColor: Colors.red,
                                   ),
                                 );
@@ -510,19 +520,25 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               'user_std': selectedClass,
                               'user_type': selectedType,
                               'user_gender': genderController.text.trim(),
-                              'user_age': int.tryParse(ageController.text.trim()) ?? 0,
+                              'user_age':
+                                  int.tryParse(ageController.text.trim()) ?? 0,
                             };
 
                             // Only update password if new password is provided and current password is verified
-                            if (newPasswordController.text.isNotEmpty && currentPasswordController.text == widget.user.userPassword) {
-                              updateData['user_password'] = newPasswordController.text.trim();
+                            if (newPasswordController.text.isNotEmpty &&
+                                currentPasswordController.text ==
+                                    widget.user.userPassword) {
+                              updateData['user_password'] =
+                                  newPasswordController.text.trim();
                             }
 
-                            final QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-                                .collection('User')
-                                .where('user_id', isEqualTo: widget.user.userId)
-                                .limit(1)
-                                .get();
+                            final QuerySnapshot querySnapshot =
+                                await FirebaseFirestore.instance
+                                    .collection('User')
+                                    .where('user_id',
+                                        isEqualTo: widget.user.userId)
+                                    .limit(1)
+                                    .get();
 
                             if (querySnapshot.docs.isEmpty) {
                               throw Exception('User document not found');
@@ -533,7 +549,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
                             if (!mounted) return;
                             Navigator.pop(context);
-                            
+
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
                                 content: Text('Profile updated successfully'),
@@ -548,15 +564,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                   user: UserModel(
                                     userId: widget.user.userId,
                                     userName: nameController.text.trim(),
-                                    parentName: parentNameController.text.trim(),
+                                    parentName:
+                                        parentNameController.text.trim(),
                                     userAddress: addressController.text.trim(),
                                     userBg: bgController.text.trim(),
                                     userMobile: mobileController.text.trim(),
                                     userStd: selectedClass ?? '',
                                     userType: selectedType ?? '',
-                                    userPassword: newPasswordController.text.isNotEmpty ? 
-                                        newPasswordController.text.trim() : widget.user.userPassword,
-                                    userAge: int.tryParse(ageController.text.trim()) ?? 0,
+                                    userPassword:
+                                        newPasswordController.text.isNotEmpty
+                                            ? newPasswordController.text.trim()
+                                            : widget.user.userPassword,
+                                    userAge: int.tryParse(
+                                            ageController.text.trim()) ??
+                                        0,
                                     userGender: genderController.text.trim(),
                                   ),
                                 ),
@@ -567,7 +588,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             if (!mounted) return;
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
-                                content: Text('Failed to update profile: ${e.toString()}'),
+                                content: Text(
+                                    'Failed to update profile: ${e.toString()}'),
                                 backgroundColor: Colors.red,
                                 duration: const Duration(seconds: 5),
                               ),
@@ -613,7 +635,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   labelText: 'Current Password',
                   suffixIcon: IconButton(
                     icon: Icon(
-                      obscureCurrentPassword ? Icons.visibility : Icons.visibility_off,
+                      obscureCurrentPassword
+                          ? Icons.visibility
+                          : Icons.visibility_off,
                     ),
                     onPressed: () {
                       setState(() {
@@ -631,7 +655,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   labelText: 'New Password',
                   suffixIcon: IconButton(
                     icon: Icon(
-                      obscureNewPassword ? Icons.visibility : Icons.visibility_off,
+                      obscureNewPassword
+                          ? Icons.visibility_off
+                          : Icons.visibility,
+                      color: Colors.grey,
                     ),
                     onPressed: () {
                       setState(() {
@@ -675,7 +702,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 }
 
                 try {
-                  final QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+                  final QuerySnapshot querySnapshot = await FirebaseFirestore
+                      .instance
                       .collection('User')
                       .where('user_id', isEqualTo: widget.user.userId)
                       .limit(1)
@@ -690,7 +718,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
                   if (!mounted) return;
                   Navigator.pop(context);
-                  
+
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
                       content: Text('Password updated successfully'),
@@ -699,9 +727,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   );
 
                   // Refresh the page with updated user data
-                  final updatedData = querySnapshot.docs.first.data() as Map<String, dynamic>;
+                  final updatedData =
+                      querySnapshot.docs.first.data() as Map<String, dynamic>;
                   updatedData['user_password'] = newPassword;
-                  
+
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
@@ -714,7 +743,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   if (!mounted) return;
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: Text('Failed to update password: ${e.toString()}'),
+                      content:
+                          Text('Failed to update password: ${e.toString()}'),
                       backgroundColor: Colors.red,
                     ),
                   );
@@ -729,7 +759,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ),
       ),
     );
-
   }
 
   Future<void> _showLogoutConfirmationDialog() async {
@@ -786,7 +815,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.primaryYellow,
-                        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 24, vertical: 12),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),
@@ -809,7 +839,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
-  Widget _buildProfileField(String label, String value, Function(String) onUpdate, {bool canDelete = true}) {
+  Widget _buildProfileField(
+      String label, String value, Function(String) onUpdate,
+      {bool canDelete = true}) {
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 8),
       child: ListTile(
@@ -854,7 +886,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           child: const Text('Cancel'),
                         ),
                         ElevatedButton(
-                          onPressed: () => Navigator.pop(context, controller.text),
+                          onPressed: () =>
+                              Navigator.pop(context, controller.text),
                           style: ElevatedButton.styleFrom(
                             backgroundColor: AppColors.primaryYellow,
                           ),
@@ -877,7 +910,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       context: context,
                       builder: (context) => AlertDialog(
                         title: Text('Clear $label'),
-                        content: const Text('Are you sure you want to clear this field?'),
+                        content: const Text(
+                            'Are you sure you want to clear this field?'),
                         actions: [
                           TextButton(
                             onPressed: () => Navigator.pop(context, false),
@@ -930,9 +964,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
       );
 
       // Refresh the page with updated data
-      final updatedData = querySnapshot.docs.first.data() as Map<String, dynamic>;
+      final updatedData =
+          querySnapshot.docs.first.data() as Map<String, dynamic>;
       updatedData[field] = value;
-      
+
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
@@ -1010,7 +1045,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
           _buildProfileField(
             'Age',
             widget.user.userAge.toString(),
-            (value) => _updateField('user_age', int.tryParse(value)?.toString() ?? '0'),
+            (value) => _updateField(
+                'user_age', int.tryParse(value)?.toString() ?? '0'),
           ),
           _buildProfileField(
             'Email',
@@ -1034,19 +1070,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
       case 0:
         return _buildOverview();
       case 1:
-        return _buildAssignments();
+        return _buildMyCourses();
       case 2:
-        return _buildAttendance();
+        return _buildFavourites();
       case 3:
-        return _buildGrades();
-      case 4:
-        return _buildSchedule();
-      case 5:
-        return _buildMessages();
-      case 6:
-        return _buildLibrary();
-      case 7:
-        return _buildProfileContent();
+        return _buildSettings();
       default:
         return _buildOverview();
     }
@@ -1103,7 +1131,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
-  Widget _buildStatsCard(String title, String value, IconData icon, Color color) {
+  Widget _buildStatsCard(
+      String title, String value, IconData icon, Color color) {
     return Card(
       elevation: 0,
       color: Colors.white,
@@ -1175,7 +1204,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
               physics: const NeverScrollableScrollPhysics(),
               itemCount: activities.length,
               itemBuilder: (context, index) {
-                final activity = activities[index].data() as Map<String, dynamic>;
+                final activity =
+                    activities[index].data() as Map<String, dynamic>;
                 return Card(
                   elevation: 0,
                   color: Colors.white,
@@ -1279,8 +1309,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     : ListView.builder(
                         itemCount: assignments.length,
                         itemBuilder: (context, index) {
-                          final assignment = assignments[index].data()
-                              as Map<String, dynamic>;
+                          final assignment =
+                              assignments[index].data() as Map<String, dynamic>;
                           return Card(
                             elevation: 0,
                             color: Colors.white,
@@ -1293,7 +1323,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               trailing: IconButton(
                                 icon: const Icon(Icons.arrow_forward),
                                 onPressed: () {
-                                  // TODO: Navigate to assignment details
+                                  // TODO
                                 },
                               ),
                             ),
@@ -1308,27 +1338,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
-  Widget _buildAttendance() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Icon(
-            Icons.calendar_today,
-            size: 64,
-            color: AppColors.textLight,
-          ),
-          const SizedBox(height: 16),
-          Text(
-            'Attendance Coming Soon',
-            style: GoogleFonts.inter(
-              color: AppColors.textLight,
-              fontSize: 16,
-            ),
-          ),
-        ],
-      ),
-    );
+  Widget _buildFavourites() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const FavouritesScreen()),
+      );
+    });
+    return Container(); 
   }
 
   Widget _buildGrades() {
@@ -1354,65 +1371,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
-  Widget _buildSchedule() {
+  Widget _buildMyCourses() {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const Icon(
-            Icons.schedule,
+            Icons.book,
             size: 64,
             color: AppColors.textLight,
           ),
           const SizedBox(height: 16),
           Text(
-            'Schedule Coming Soon',
-            style: GoogleFonts.inter(
-              color: AppColors.textLight,
-              fontSize: 16,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildMessages() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Icon(
-            Icons.message,
-            size: 64,
-            color: AppColors.textLight,
-          ),
-          const SizedBox(height: 16),
-          Text(
-            'Messages Coming Soon',
-            style: GoogleFonts.inter(
-              color: AppColors.textLight,
-              fontSize: 16,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildLibrary() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Icon(
-            Icons.library_books,
-            size: 64,
-            color: AppColors.textLight,
-          ),
-          const SizedBox(height: 16),
-          Text(
-            'Library Coming Soon',
+            'My Courses Coming Soon',
             style: GoogleFonts.inter(
               color: AppColors.textLight,
               fontSize: 16,
@@ -1483,11 +1454,27 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
     final isDesktop = MediaQuery.of(context).size.width >= 768;
-    
+
     Widget mainContent = _buildContent();
 
     if (isDesktop) {
       return Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          elevation: 0,
+          actions: [
+            IconButton(
+              icon:
+                  const Icon(Icons.notifications_outlined, color: Colors.black),
+              onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => NotificationScreen()),
+              ),
+            ),
+            const SizedBox(width: 8),
+          ],
+        ),
         body: Row(
           children: [
             _buildSidebar(),
@@ -1497,6 +1484,22 @@ class _DashboardScreenState extends State<DashboardScreen> {
       );
     } else {
       return Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          elevation: 0,
+          actions: [
+            IconButton(
+              icon:
+                  const Icon(Icons.notifications_outlined, color: Colors.black),
+              onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => NotificationScreen()),
+              ),
+            ),
+            const SizedBox(width: 8),
+          ],
+        ),
         body: mainContent,
         bottomNavigationBar: BottomNavigationBar(
           currentIndex: _selectedIndex,
@@ -1508,11 +1511,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
           type: BottomNavigationBarType.fixed,
           selectedItemColor: AppColors.primaryYellow,
           unselectedItemColor: Colors.grey,
-          items: _sidebarItems.map((item) => BottomNavigationBarItem(
-            icon: Icon(item.icon),
-            activeIcon: Icon(item.activeIcon),
-            label: item.title,
-          )).toList(),
+          items: _sidebarItems
+              .map((item) => BottomNavigationBarItem(
+                    icon: Icon(item.icon),
+                    activeIcon: Icon(item.activeIcon),
+                    label: item.title,
+                  ))
+              .toList(),
         ),
       );
     }
@@ -1523,18 +1528,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
       case 0:
         return _buildDashboardContent();
       case 1:
-        return _buildAssignments();
+        return _buildMyCourses();
       case 2:
-        return _buildAttendance();
+        return _buildFavourites();
       case 3:
-        return _buildGrades();
-      case 4:
-        return _buildSchedule();
-      case 5:
-        return _buildMessages();
-      case 6:
-        return _buildLibrary();
-      case 7:
         return _buildSettings();
       default:
         return _buildDashboardContent();

@@ -15,6 +15,8 @@ dependencies:
   firebase_core: ^3.9.0
   firebase_auth: ^5.3.4
   cloud_firestore: ^5.6.0
+  intl: ^0.18.1
+  path_provider_android: ^2.2.15
 
 dev_dependencies:
   flutter_test:
@@ -27,3 +29,6 @@ flutter:
     - assets/images/slide1.jpg
     - assets/images/slide2.jpg
     - assets/images/slide3.jpg
+    - assets/images/noti.jpg
+    - assets/images/noFav.jpg
+    - assets/images/biology.jpg
